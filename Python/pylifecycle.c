@@ -457,11 +457,22 @@ _coerce_default_locale_settings(const _PyCoreConfig *config, const _LocaleCoerci
     _Py_SetLocaleFromEnv(LC_ALL);
 
     /* Set the relevant locale environment variable */
+#ifdef __sgi
+    char *envstr;
+    envstr = malloc(strlen(newloc)+11); /* two nulls + LC_CTYPE= */
+    envstr = strcat("LC_CTYPE=", newloc);
+    if (putenv(envstr)) {
+        free(envstr);
+#else
     if (setenv("LC_CTYPE", newloc, 1)) {
+#endif
         fprintf(stderr,
                 "Error setting LC_CTYPE, skipping C locale coercion\n");
         return;
     }
+#ifdef __sgi
+    free(envstr);
+#endif
     if (config->coerce_c_locale_warn) {
         fprintf(stderr, C_LOCALE_COERCION_WARNING, newloc);
     }
