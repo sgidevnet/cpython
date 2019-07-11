@@ -882,6 +882,9 @@ pymonotonic(_PyTime_t *tp, _Py_clock_info_t *info, int raise)
 #ifdef CLOCK_HIGHRES
     const clockid_t clk_id = CLOCK_HIGHRES;
     const char *implementation = "clock_gettime(CLOCK_HIGHRES)";
+#elif defined(CLOCK_SGI_CYCLE)
+    const clockid_t clk_id = CLOCK_SGI_CYCLE;
+    const char *implementation = "clock_gettime(CLOCK_SGI_CYCLE)";
 #else
     const clockid_t clk_id = CLOCK_MONOTONIC;
     const char *implementation = "clock_gettime(CLOCK_MONOTONIC)";
